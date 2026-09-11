@@ -171,6 +171,10 @@ func (f *Fs) InternalTestPurgeBatches(t *testing.T) {
 	}
 	require.NoError(t, f.Purge(ctx, dir))
 	entries, err := f.List(ctx, dir)
+	if f.opt.DirectoryMarkers {
+		require.ErrorIs(t, err, fs.ErrorDirNotFound)
+		return
+	}
 	require.NoError(t, err)
 	assert.Empty(t, entries)
 }
